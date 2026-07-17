@@ -1,0 +1,148 @@
+% =====================================================================
+% Initial Attacker Foothold Context Seeds
+% =====================================================================
+attackerLocated(internet).
+malicious(internet).
+
+% Map your edge gateway context so the bypass rule can trigger
+located(internet, 'External_Internet', ipSubnet).
+isGateway(fortim_gateway, 'External_Internet').
+isGateway(fortim_gateway, 'OT_DMZ').
+
+% =====================================================================
+% Subnet Layout Topology
+% =====================================================================
+located(it_subnet,'IT_Network',ipSubnet).
+located(ot_dmz_subnet,'OT_DMZ',ipSubnet).
+located(l2_subnet,'Level_2_Network',ipSubnet).
+located(l1_subnet,'Level_1_Network',ipSubnet).
+located(services_subnet, 'Services_Network',ipSubnet).
+located(ews_subnet,'EWS_Network',ipSubnet).
+located(da_package_subnet, 'DA_Package_Network',ipSubnet).
+
+located(sub_process_area_1, 'Sub_Process_Area_1',ipSubnet).
+located(sub_process_area_n, 'Sub_Process_Area_n', ipSubnet).
+
+located(pn_area_1_1, 'Sub-Process_PN_Area_1',bus).
+located(pn_area_n_n, 'Sub-Process_PN_Area_n', bus).
+
+existingProtocol('IT_Network', ethernet).
+existingProtocol('OT_DMZ', ethernet).
+existingProtocol('Level_2_Network', ethernet).
+existingProtocol('Level_1_Network',ethernet).
+existingProtocol('Services_Network',ethernet).
+existingProtocol('EWS_Network',ethernet).
+existingProtocol('DA_Package',ethernet).
+
+existingProtocol('Sub_Process_Area_1',ethernet).
+existingProtocol('Sub_Process_Area_n',ethernet).
+existingProtocol('Sub_Process_PN_Area_1',profinet).
+existingProtocol('Sub_Process_PN_Area_n',profinet).
+
+% =====================================================================
+% Software Services Infrastructure Definitions
+% =====================================================================
+networkService(ot_asset_mgmt, asset_console, https, 443, admin).
+networkService(patch_server, wsus_update, tcp, 8530, admin).
+networkService(jump_server, sshd, tcp, 22, admin).
+networkService(eth_net_config, net_conf_service, tcp, 8080, admin).
+networkService(pn_net_config, pn_conf_service,tcp, 8081,admin).
+networkService(forward_proxy, squid_proxy, tcp, 3128,admin).
+networkService(reverse_proxy, nginx_reverse, tcp, 443, admin).
+
+networkService(ot_q2_manufacturing, mfg_exec_service, tcp, 8082, admin).
+networkService(pims_server, pims_service, tcp, 5001, admin).
+networkService(db_server, oracle_db, tcp, 1521, root).
+
+networkService(active_directory, active_directory, tcp, 389, admin).
+networkService(radius_server, radius_auth, udp, 1812, admin).
+networkService(ca_authority, cert_service, tcp, 443, admin).
+networkService(ntp_server, ntp_service, udp, 123, admin).
+networkService(log_aggregator, syslog_daemon, udp, 514, admin).
+networkService(iba_hd, iba_historian, tcp, 9002, admin).
+
+networkService(l1_ews, ews_l1_programming, tcp, 443, engineer).
+networkService(l2_ews, ews_l2_programming, tcp, 443, engineer).
+networkService(hmi_client, hmi_runtime, tcp, 8085, operator).   
+  
+% Industrial Control Services (Unified casing: opcua_server)
+networkService(plc_l1_1, opcua_server, tcp, 4840, root).
+networkService(plc_l1_n, opcua_server, tcp, 4840, root).
+networkService(keba_pda_1, iba_pda, tcp, 9003, admin).
+networkService(keba_hmi_1, keba_runtime, tcp, 502, operator).
+
+networkService(plc_ln_1, opcua_server, tcp, 4840, root).
+networkService(plc_ln_n, opcua_server, tcp, 4840, root).
+networkService(keba_pda_n, iba_pda, tcp, 9003, admin).
+networkService(keba_hmi_n, keba_runtime, tcp, 502, operator).
+
+networkService(hpac_node, hpac_service, tcp, 8086, admin).
+networkService(arianna_gateway, gateway_runtime, tcp, 443, admin).
+networkService(da_plc, opcua_server, tcp, 4840,root).
+networkService(terminal_1, terminal_session, tcp, 3389, operator).
+
+% =====================================================================
+% Field Device Topology Links
+% =====================================================================
+isMaster(plc_l1_1, 'Sub-Process_PN_Area_1').
+isSlave(drive_area_1_1, 'Sub-Process_PN_Area_1').
+isSlave(drive_area_1_n, 'Sub-Process_PN_Area_1').
+l2Connection(jump_server, drive_area_1_1, 'Sub-Process_PN_Area_1', profinet, bus).
+
+isMaster(plc_ln_1, 'Sub-Process_PN_Area_n').
+isSlave(drive_area_n_1, 'Sub-Process_PN_Area_n').
+isSlave(drive_area_n_n, 'Sub-Process_PN_Area_n').
+ 
+
+dataFlow(keba_pda_1, iba_hd, pda_data_stream_1, twoWay).
+flowBind(pda_data_stream_1, tcp, 9002).
+dataFlow(keba_pda_n, iba_hd, pda_data_stream_n, twoWay).
+flowBind(pda_data_stream_n, tcp, 9002).
+dataFlow(jump_server, log_aggregator, syslog_dmz_flow, oneWay).
+flowBind(syslog_dmz_flow, udp, 514).
+
+% =====================================================================
+% Access Control Firewalls (ACLs)
+% =====================================================================
+aclNW('IT_Network', reverse_proxy, tcp, 443).
+aclNW(jump_server, 'Level_2_Network', tcp, 22).
+aclNW(jump_server, 'Level_1_Network', tcp, 22).
+aclNW('Level_2_Network', 'Level_2_Network', tcp, 1521).
+aclNW(hmi_client, 'Sub_Process_Area_1', tcp, 4840).
+aclNW(hmi_client, 'Sub_Process_Area_n', tcp, 4840).
+
+% Crucial direct link seed so your attacker can pivot forward
+aclNW(internet, jump_server, tcp, 22).
+aclNW(jump_server, plc_l1_1, tcp, 502).
+
+aclNW('OT_DMZ', log_aggregator, udp, 514).
+aclNW('Level_2_Network', log_aggregator, udp, 514).
+aclNW('Level_1_Network', log_aggregator, udp, 514).
+
+% =====================================================================
+% Credential Mappings & Domain Specifications
+% =====================================================================
+isDomainController(vdc01, 'Danieli_Domain').
+isDomainController(vdc02, 'Danieli_Domain').
+
+% Case-unified with your topology server naming structures
+sameCredentials(jump_server, vdc01).
+sameCredentials(vdc01, vBackup).
+sameCredentials(vBackup, vAssetInventory).
+
+% =====================================================================
+% Targeted Evaluation Goals
+% =====================================================================
+attackGoal(dos(_Principal, plc_l1_1)).
+attackGoal(unauthorizedControl(plc_l1_1)).
+attackGoal(domainCompromise('Danieli_Domain')).
+attackGoal(execCode(vBackup, admin)).
+attackGoal(execCode(vAssetInventory, admin)).
+
+vulHost(jump_server, 'CVE-2023-38408', sshd, remoteExploit, privilegeEscalation).
+
+netAccess(internet, internet, jump_server, tcp, 22).
+
+sameCredentials(jump_server, vdc01).
+sameCredentials(vdc01, vBackup).
+sameCredentials(vBackup, vAssetInventory).

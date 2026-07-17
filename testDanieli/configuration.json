@@ -1,0 +1,260 @@
+{
+    "attacker_location": "internet",
+    "hosts": [
+        {
+            "id": "vDC01",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vDC02",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vBackup",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vAssetInventory",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vPatchServer",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vJumpServer",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "LogAggregator",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "FWD_PROXY",
+            "os": " ",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "REV_PROXY",
+            "os": " ",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "MS_ActiveDirectory",
+            "os": " ",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "Radius",
+            "os": " ",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "CertificationAuthority",
+            "os": " ",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vHMI-SRV01",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vL2_B&W",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vDB_B&W",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vRM-HMI01",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        },
+        {
+            "id": "vRM-TWSHMI01",
+            "os": "Windows Server 2022",
+            "credentials": {
+                "admin": "Administrator/Automation%1969",
+                "user":"Danieli/Automation%1969"
+            },
+            "software_services":[
+                {
+                    "name":"active_directory", 
+                    "port":389, 
+                    "protocol":"tcp" 
+                }
+            ]
+        }
+    ]
+}
