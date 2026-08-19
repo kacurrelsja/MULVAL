@@ -1,0 +1,19 @@
+scenario,goal,status,exec_time_sec,num_nodes,num_edges
+00_Full_Unfiltered,<none>,OK,1.662677088,0
+0,14
+08_Historian_Data_Tampering,-g processDataTampering(keba_pda_1,iba_hd),OK,1.494216783,0
+0,14
+04_PLC_Command_Injection,-g unauthorizedControl(plc_l1_1),OK,1.892256261,0
+0,14
+06_PROFINET_Drive_Control,-g physicalDriveControl(jump_server,drive_area_1_1),OK,1.675964418,0
+0,20
+03_Domain_Takeover,-g domainCompromise(danieli_domain),OK,1.391592513,0
+0,26
+05_PLC_Root_Exec,-g execCode(plc_l1_1,root),OK,1.353719521,0
+0,14
+01_DMZ_Ingress,-g execCode(jump_server,admin),OK,3.083485644,0
+0,14
+07_OPCUA_DoS,-g dos(internet,plc_l1_1),OK,1.281371481,0
+0,20
+02_Lateral_Credential_Reuse,-g execCode(vbackup,admin),OK,1.462952636,0
+0,26

@@ -1,4 +1,4 @@
-[xsb_configuration loaded]
+[xsb_configuration loaded, cpu time used: 0.001 seconds]
 [sysinitrc loaded]
 [xsbbrat loaded]
 
@@ -7,18 +7,18 @@ XSB Version 5.0.0 (Green Tea) of May 15, 2022
 [Build date: 2026-06-17]
 
 | ?- [Compiling ./run]
-[run compiled, cpu time used: 0.010 seconds]
+[run compiled, cpu time used: 0.019 seconds]
 [run loaded]
 [libmulval loaded]
 [translate loaded]
 [attack_trace loaded]
 [auxiliary loaded]
-[./running_rules.P dynamically loaded, cpu time used: 0.023 seconds]
-[./input.P dynamically loaded, cpu time used: 0.005 seconds]
-[/home/xhulia/mulval/src/analyzer/advances_notrim.P dynamically loaded, cpu time used: 0.001 seconds]
+[./running_rules.P dynamically loaded, cpu time used: 0.030 seconds]
+[./input.P dynamically loaded, cpu time used: 0.006 seconds]
+[/home/xhulia/mulval/src/analyzer/advances_notrim.P dynamically loaded, cpu time used: 0.000 seconds]
 @@@@@@@@@@@@@@Done transforming in mode dynamic_decl
 
-[./dynamic_decl.gen dynamically loaded, cpu time used: 0.010 seconds]
+[./dynamic_decl.gen dynamically loaded, cpu time used: 0.005 seconds]
 @@@@@@@@@@@@@@Done transforming in mode completeTrace2
 
 @@@@@@@@@@@@@@Done transforming in mode completeTrace2
@@ -29,4 +29,4 @@ Running attack simulation...
 
 yes
 | ?- 
-End XSB (cputime 0.08 secs, elapsetime 0.13 secs)
+End XSB (cputime 0.09 secs, elapsetime 0.22 secs)

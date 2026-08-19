@@ -170,6 +170,21 @@ fi
 rm -f trace_output.P
 rm -f xsb_log.txt
 
+INPUT_DIR=$(dirname "$INPUT")
+AUTOLOAD_COMPANION=
+case "$(basename "$INPUT")" in
+    attack.P)
+        if test -f "$INPUT_DIR/environmentNetwork.P"; then
+            AUTOLOAD_COMPANION="$INPUT_DIR/environmentNetwork.P"
+        fi
+        ;;
+    environmentNetwork.P)
+        if test -f "$INPUT_DIR/attack.P"; then
+            AUTOLOAD_COMPANION="$INPUT_DIR/attack.P"
+        fi
+        ;;
+esac
+
 cat $rule_file $additional_rule_file > running_rules.P
 
 # create an XSB running script
@@ -184,6 +199,17 @@ cat > run.P <<EOF
 :-load_dyn('running_rules.P').
 
 :-load_dyn('$INPUT').
+
+EOF
+
+if test -n "$AUTOLOAD_COMPANION"; then
+    cat >> run.P <<EOF
+:-load_dyn('$AUTOLOAD_COMPANION').
+
+EOF
+fi
+
+cat >> run.P <<EOF
 
 :-assert(traceMode($trace_option)).
 

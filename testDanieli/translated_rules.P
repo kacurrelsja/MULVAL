@@ -1,0 +1,26 @@
+:-(mvTrc(netAccess(_h8029,_h8030,_h8031,_h8032,_h8033,0)),','(attackerLocated(_h8030),','(malicious(_h8029),','(aclNW(_h8030,_h8031,_h8032,_h8033),assert_trace(because(0,rule_desc('Direct network reachability via permissible ACL policy',1.0),netAccess(_h8029,_h8030,_h8031,_h8032,_h8033),[aclNW(_h8030,_h8031,_h8032,_h8033),malicious(_h8029),attackerLocated(_h8030)])))))).
+
+:-(mvTrc(netAccess(_h8029,_h8030,_h8031,_h8032,_h8033,1)),','(mvTrc(execCode(_h8030,_h8039,_h8083)),','(malicious(_h8029),','(aclNW(_h8030,_h8031,_h8032,_h8033),assert_trace(because(1,rule_desc('Network reachability from compromised intermediate host',1.0),netAccess(_h8029,_h8030,_h8031,_h8032,_h8033),[aclNW(_h8030,_h8031,_h8032,_h8033),malicious(_h8029),execCode(_h8030,_h8039)])))))).
+
+:-(mvTrc(execCode(_h8029,_h8030,2)),','(networkService(_h8029,_h8036,_h8037,_h8038,_h8030),','(vulHost(_h8029,_h8045,_h8036,remoteExploit,privEscalation),','(mvTrc(netAccess(_h8050,_h8051,_h8029,_h8037,_h8038,_h8107)),assert_trace(because(2,rule_desc('Remote code execution via vulnerable network service',1.0),execCode(_h8029,_h8030),[netAccess(_h8050,_h8051,_h8029,_h8037,_h8038),vulHost(_h8029,_h8045,_h8036,remoteExploit,privEscalation),networkService(_h8029,_h8036,_h8037,_h8038,_h8030)])))))).
+
+:-(mvTrc(execCode(_h8029,admin,3)),','(mvTrc(execCode(_h8035,admin,_h8073)),','(sameCredentials(_h8035,_h8029),assert_trace(because(3,rule_desc('Lateral movement across hosts via shared administrative credentials',1.0),execCode(_h8029,admin),[sameCredentials(_h8035,_h8029),execCode(_h8035,admin)]))))).
+
+:-(mvTrc(domainCompromise(_h8029,4)),','(mvTrc(execCode(_h8034,admin,_h8072)),','(isDomainController(_h8034,_h8029),assert_trace(because(4,rule_desc('Complete domain takeover via Domain Controller administrative compromise',1.0),domainCompromise(_h8029),[isDomainController(_h8034,_h8029),execCode(_h8034,admin)]))))).
+
+:-(mvTrc(unauthorizedControl(_h8029,5)),','(mvTrc(execCode(_h8034,admin,_h8083)),','(aclNW(_h8034,_h8029,tcp,502),','(networkService(_h8029,_h8046,tcp,502,_h8049),assert_trace(because(5,rule_desc('Unauthorized industrial command injection into PLC over unauthenticated Modbus/TCP',0.90000000000000002),unauthorizedControl(_h8029),[networkService(_h8029,_h8046,tcp,502,_h8049),aclNW(_h8034,_h8029,tcp,502),execCode(_h8034,admin)])))))).
+
+:-(mvTrc(execCode(_h8029,root,6)),','(mvTrc(unauthorizedControl(_h8029,_h8075)),assert_trace(because(6,rule_desc('Unauthorized control of industrial controller yields root execution privilege',1.0),execCode(_h8029,root),[unauthorizedControl(_h8029)])))).
+
+:-(mvTrc(dos(_h8029,_h8030,7)),','(malicious(_h8029),','(networkService(_h8030,opcua_server,tcp,4840,_h8044),','(vulHost(_h8030,cve_2022_25888,opcua_server,remoteExploit,dos),','(aclNW(_h8058,_h8030,tcp,4840),','(mvTrc(execCode(_h8058,_h8064,_h8127)),assert_trace(because(7,rule_desc('Denial of Service against Level 1 OPC UA server disabling control-loop communications',1.0),dos(_h8029,_h8030),[execCode(_h8058,_h8064),aclNW(_h8058,_h8030,tcp,4840),vulHost(_h8030,cve_2022_25888,opcua_server,remoteExploit,dos),networkService(_h8030,opcua_server,tcp,4840,_h8044),malicious(_h8029)])))))))).
+
+:-(mvTrc(physicalDriveControl(_h8029,_h8030,8)),','(mvTrc(execCode(_h8029,_h8036,_h8093)),','(l2Connection(_h8029,_h8030,_h8043,profinet,bus),','(isMaster(_h8050,_h8043),','(isSlave(_h8030,_h8043),','(mvTrc(unauthorizedControl(_h8050,_h8146)),assert_trace(because(8,rule_desc('Unauthorized physical drive actuation via unauthenticated PROFINET bus link',1.0),physicalDriveControl(_h8029,_h8030),[unauthorizedControl(_h8050),isSlave(_h8030,_h8043),isMaster(_h8050,_h8043),l2Connection(_h8029,_h8030,_h8043,profinet,bus),execCode(_h8029,_h8036)])))))))).
+
+:-(mvTrc(processDataTampering(_h8029,_h8030,9)),','(dataFlow(_h8029,_h8030,_h8037,twoWay),','(flowBind(_h8037,tcp,_h8045),','(networkService(_h8030,iba_historian,tcp,_h8045,_h8054),','(mvTrc(execCode(_h8029,_h8057,_h8115)),assert_trace(because(9,rule_desc('Tampering and falsification of historical telemetry data streams',0.80000000000000004),processDataTampering(_h8029,_h8030),[execCode(_h8029,_h8057),networkService(_h8030,iba_historian,tcp,_h8045,_h8054),flowBind(_h8037,tcp,_h8045),dataFlow(_h8029,_h8030,_h8037,twoWay)]))))))).
+
+:-(mvTrc(canAccessHost(_h8029,10)),','(mvTrc(execCode(_h8029,_h8032,_h8075)),assert_trace(because(10,rule_desc('Access a host through executing code on the machine',1.0),canAccessHost(_h8029),[execCode(_h8029,_h8032)])))).
+
+:-(mvTrc(accessFile(_h8029,_h8030,_h8031,11)),','(mvTrc(execCode(_h8029,_h8037,_h8076)),','(canAccessFile(_h8029,_h8037,_h8030,_h8031),assert_trace(because(11,rule_desc('execCode implies file access',1.0),accessFile(_h8029,_h8030,_h8031),[canAccessFile(_h8029,_h8037,_h8030,_h8031),execCode(_h8029,_h8037)]))))).
+
+:-(mvTrc(principalCompromised(_h8029,12)),','(hasAccount(_h8029,_h8035,root),','(mvTrc(execCode(_h8035,root,_h8087)),assert_trace(because(12,rule_desc('Password sniffing via root access',0.80000000000000004),principalCompromised(_h8029),[execCode(_h8035,root),hasAccount(_h8029,_h8035,root)]))))).
+

@@ -1,0 +1,27 @@
+/* --- TOPOLOGY & ENTRY POINT --- */
+attackerLocated(internet).
+malicious(internet).
+
+located(jump_server, ot_dmz, ipSubnet).
+located(vdc01, danieli_domain, ipSubnet).
+located(plc_l1_1, level_1_network, ipSubnet).
+
+/* --- ACCESS CONTROL LISTS (Firewall Rules) --- */
+aclNW(internet, jump_server, tcp, 22).
+aclNW(jump_server, vdc01, tcp, 445).
+aclNW(jump_server, plc_l1_1, tcp, 502).
+
+/* --- SERVICES --- */
+networkService(jump_server, sshd, tcp, 22, admin).
+networkService(vdc01, active_directory, tcp, 445, admin).
+networkService(plc_l1_1, modbus_service, tcp, 502, root).
+
+/* --- VULNERABILITIES & CREDENTIALS --- */
+vulHost(jump_server, cve_2023_38408, sshd, remoteExploit, privEscalation).
+sameCredentials(jump_server, vdc01).
+isDomainController(vdc01, danieli_domain).
+vulLinkProtocol(plc_l1_1, vul_modbus_no_auth, modbus, adjacent, impersonateDst).
+
+/* --- TARGET GOALS --- */
+attackGoal(domainCompromise(danieli_domain)).
+attackGoal(unauthorizedControl(plc_l1_1)).

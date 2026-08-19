@@ -1,0 +1,30 @@
+{
+  "llm_calls": [
+    {
+      "atom": "located(host, zone, ipSubnet)",
+      "sec": 1.4510717980010668
+    },
+    {
+      "atom": "networkService(host, service, protocol, port, privilege)",
+      "sec": 1.8594636199995875
+    },
+    {
+      "atom": "hasAccount(host, username, password_key)",
+      "sec": 3.0202270390000194
+    },
+    {
+      "atom": "aclNW(source, destination, protocol, port)",
+      "sec": 1.0830827390018385
+    },
+    {
+      "atom": "vulHost(host, cve_id, service, remoteExploit, privEscalation)",
+      "sec": 11.838659945002291
+    },
+    {
+      "atom": "l2Connection(source, destination, bus_id, protocol, bus)",
+      "sec": 12.687097592002829
+    }
+  ],
+  "llm_total_sec": 31.939602733007632,
+  "asp_total_sec": 0.0023982059938134626
+}

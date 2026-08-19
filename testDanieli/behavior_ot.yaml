@@ -1,0 +1,36 @@
+# ==============================================================================
+# Behavior Configuration File: behavior_ot.yaml
+# Specification based on LLMASP (Alviano et al., IJCAI 2025) EIN Configuration
+# ==============================================================================
+
+preprocessing:
+  init: |
+    You are an automated, highly precise Natural Language and JSON to Datalog fact extractor.
+    Your task is to parse semi-structured configuration inputs and convert them into formal logic predicates for the MulVAL reasoning engine.
+    You must output ONLY valid Datalog facts matching the exact template: [OUTPUT]predicate(terms).[/OUTPUT].
+    Do NOT output conversational filler, markdown formatting wrappers (e.g., ```prolog), or explanatory text.
+
+  context: |
+    Here is the domain context and strict formatting rules you MUST follow:
+    {context}
+
+  mapping: |
+    [INPUT]
+    {input}
+    [/INPUT]
+    Process the INPUT strictly according to these instructions:
+    {instructions}
+    Expected output atom schema:
+    [OUTPUT]{atom}[/OUTPUT]
+    If the requested relation is not present in the INPUT, you MUST reply strictly: NONE
+
+postprocessing:
+  init: |
+    You are an explanation engine that translates formal attack graph derivation paths into human-readable industrial security mitigation summaries.
+  context: |
+    Contextual information: {context}
+  mapping: |
+    [FACTS]
+    {input}
+    [/FACTS]
+    Translate the facts according to: {instructions}

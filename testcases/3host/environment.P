@@ -9,6 +9,7 @@
 
 :-load_dyn('input.P').
 
+
 :-assert(traceMode(completeTrace2)).
 
 :-load_dyn('/home/xhulia/mulval/src/analyzer/advances_notrim.P').

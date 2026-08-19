@@ -68,6 +68,46 @@ meta(advances(_, _)).
 :- table logInService/3.
 
 
+/* declarations altered for MulVAL OT project */
+:- table netAccess/5.
+:- table execCode/2.
+:- table dos/2.
+:- table domainCompromise/1.
+:- table unauthorizedcontrol/1.
+:- table spoofLinkHost/5.
+:- table processDataTampering/2.
+:- table physicalDriveControl/2.
+
+:- dynamic primitive/1.
+:- dynamic derived/1.
+
+primitive(located/3).
+primitive(isGateway/2).
+primitive(isMaster/2).
+primitive(isSlave/2).
+primitive(l2Connection/5).
+primitive(samecredentials/2).
+primitive(isDomainController/2).
+primitive(networkService/5).
+primitive(aclNW/4).
+primitive(vulHost/5).
+primitive(vulLinkProtocol/5).
+primitive(dataFlow/4).
+primitive(flowBind/3).
+primitive(malicious/1).
+primitive(attackerLocated/1). 
+
+derived(netAccess/5).
+derived(execCode/2).
+derived(dos/2).
+derived(domainCompromise/1).
+derived(unauthorizedcontrol/1).
+derived(spoofLinkHost/5).
+derived(processDataTampering/2).
+derived(physicalDriveControl/2).
+
+
+
 
 /******************************************************/
 /****         Interaction Rules                   *****/
@@ -117,6 +157,69 @@ interaction_rule(
   rule_desc('Trojan horse installation',
   0.8)).
 
+  /* interaction rules extension */
+  /*
+interaction_rule(
+  (netAccess(Principal, AttackerSource, TargetHost, Protocol, Port):- 
+    attackerLocated(AttackerSource),ù
+    malicious(Principal),
+    aclNW(Attackersource, TargetHost, Protocol, Port)),
+  rule_desc('Direct network reachability via permissible ACL policy', 1.0)
+).
+
+interaction_rule(
+  (execCode(TargetHost, Privilege):-
+    networkService(targetHost, Program, Protocol, Port, Privilege),
+    vulHost(targetHost, _VulId, Program, remoteExploit, privilegeEscalation),
+    netAccess(_Principal, _AttackerSource, TargetHost, Protocol, Port)),
+  rule_desc('Remote code execution via vulnerable software service', 1.0)
+).
+
+interaction_rule(
+  (execCode(TargetHost, admin) :- 
+    execCode(DCHost, admin),
+    isDomainController(DCHost, DomainID))
+  rule_desc('Complete domain takeover via Domain Controller compromise', 1.0)
+).
+
+interaction_rule(
+  (unauthorizedControl(TargetPLC) :-
+   execCode(supervisorHost, admin),
+   aclNW(SupervisorHost, TargetPLC, tcp, 502),
+   networkService(TargetPLC, _Service, tcp, 502, _)
+),
+  rule_desc('Unauthorize industrial command injection into PLC over unauthenticated MOdbus/TCP', 0.9)
+).
+
+interaction_rule(
+  (dos(Principal), 
+  networkService(TargetPLC, opcua_server, tcp, 4840, _),
+  vulHost(TargetPLC, 'CVE-2022-25888', opcua_server, remoteExploit, dos),
+  aclNW(SourceNode, TargetPLC, tcp, 4840),
+  execCode(SourceNode, _)),
+  rule_desc('Denial of Service against Level 1 OPC UA server disabling control-loop communications', 1.0)
+  ).
+
+interaction_rule(
+  (physicalDriveControl(attackerNode, SlaveDrive) :-
+    execCode(AttackerNode, _),
+    l2Connection(AttackerNode, SlaveDrive, BusID, profinet, bus),
+    isMaster(MasterPLC, BusID),
+    isSlave(SlaveDrive, BusID),
+    unauthorizedControl(MasterPLC)),
+  rule_desc('Unauthorized physical drive actuation via unauthenticated PROFINET bus link', 1.0)
+).
+
+interaction_rule(
+  (processDataTampering(SourcePDA, TargetHD):-
+    dataFlow(SourcePDA, TargetHD, FlowID, twoWay),
+    flowBind(FlowID, tcp, Port),
+    networkService(TargetHD, iba_historian, tcp, Port, _),
+    execCode(SourcePDA, _)),
+  rule_desc('Tampering and falsification of historical telemetry data streams', 0.8)
+).
+
+*/
 /* Singleton variable at head
 interaction_rule(
  (execCode( Attacker, Host, _) :-
@@ -184,6 +287,8 @@ interaction_rule(
 	execCode(H, root)),
   rule_desc('password sniffing',
   0.8)).
+
+
 
 interaction_rule(
   (principalCompromised(Victim) :-
@@ -266,7 +371,34 @@ interaction_rule(
   rule_desc('',
   1)).
 
+/*
+interaction_rule(
+  (canAccessFile(H, Usr, Acc, Path):-
+  localFileProtection(H, Usr, Acc, Path)),
+  rule_desc('', 1)
+).
 
+interaction_rule(
+  (canAccessFile(H, Usr, Acc, Path) :-
+  localFileProtection(H, Usr, Acc, Path)),
+  rule_desc('', 1)
+).
+
+interaction_rule(
+  (canAccessFile(H, Usr, Acc, Path) :-
+  localFileProtection(H, Usr, Acc, Path)),
+  rule_desc('',1)
+).
+
+interaction_rule(
+  (canAccessFile(H, Usr, Acc, Path):-
+  localFileProtection(H, Usr, Acc, Path)),
+  rule_desc('', 1)
+).
+
+
+
+*/
 /* Singleton variable in head
 interaction_rule(
   (canAccessFile(_H, root, _Access, _Path)),
@@ -278,7 +410,7 @@ interaction_rule((vulExists(H, ID, Sw, Range, Consequence):-
 	        vulExists(H, ID, Sw),
 		vulProperty(ID, Range, Consequence)),
              rule_desc('',
-             1)).
+             1)). 
 
 interaction_rule((vulExists(H, _ID, Sw, Range, Consequence):-
 	        bugHyp(H, Sw, Range, Consequence)),
@@ -291,7 +423,6 @@ interaction_rule((vulExists(H, ID, Sw, Range, Consequence):-
 		dependsOn(H, Sw, Library)),
              rule_desc('Library bug',
              1)).
-
 
 interaction_rule(
    (accessMaliciousInput(H, Victim, Software) :-
@@ -332,7 +463,6 @@ interaction_rule(
 	hasAccount(Victim, H, _Perm)),
   rule_desc('A remote client vulnerability can potentially access malicious input from a host used by careless user',
   1)).
-
 
 interaction_rule(
    (canAccessMaliciousInput(H, Browser) :-
