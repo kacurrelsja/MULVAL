@@ -44,6 +44,7 @@ networkService(plc_l1_1, modbus_service, tcp, 502, root).
 networkService(plc_l1_1, opcua_server, tcp, 4840, root).
 networkService(keba_pda_1, sensor_telemetry_agent, tcp, 8091, admin).
 networkService(iba_hd, iba_historian, tcp, 9099, admin).
+
  
 vulHost(jump_server, cve_2022_26809, rpc_service, remoteExploit, privEscalation). 
 vulHost(certificationauthority, cve_2022_26923, adcs_web_enrollment, remoteExploit, privEscalation).

@@ -1,2 +1,0 @@
-% Minimal Danieli goal for the canonical MulVAL attack-chain.
-attackGoal(execCode(plc_l1_1, root)).

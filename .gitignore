@@ -1,0 +1,39 @@
+# C / Java build artifacts
+*.o
+*.class
+*.jar
+*.so
+*.dylib
+*.dll
+*.exe
+
+# XSB / Prolog compilation caches
+*.xwam
+*.xsb_tmp
+
+# MulVAL runtime temporary files
+mulval_temp/
+trash/
+*.tmp
+*.log
+
+# Root-level intermediate derivation outputs
+/AttackGraph.dot
+/AttackGraph.pdf
+/AttackGraph.txt
+/AttackGraph.eps
+/environmentNetwork.P
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+.venv/
+env/
+*.env
+
+# OS & IDE
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
