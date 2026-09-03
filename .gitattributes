@@ -1,0 +1,45 @@
+*.rule linguist-language=Datalog
+
+*.P linguist-language=Prolog
+*.pl linguist-language=Prolog
+
+*.lp linguist-language=Prolog
+
+*.dot linguist-language=Graphviz
+
+#Exclude generated output attack graphs and logs from the language breakdown
+
+output/*  linguist-vendored
+graphs/*  linguist-vendored
+*.log   linguist-vendored
+benchmark_results.csv  linguist-vendored
+pipeline_timing.json  linguist-vendored
+
+*.aux  linguist-vendored
+*. bbl  linguist-vendored
+*.blg  linguist-vendored
+*.fdb_latexmk  linguist-vendored
+*.fls  linguist-vendored
+*.out  linguist-vendored
+*.toc  linguist-vendored
+*.synctex.gz  linguist-vendored
+
+#Setting default behavior to autoamatically normailze line endings to LF
+* text=auto eol=lf
+*.sh text eol=lftext eol=lf
+
+*.py    text eol=lf
+*.tex    text eol=lf
+*.cls    text eol=lf
+*.sty    text eol=lf
+*.P    text eol=lf
+*.rule    text eol=lf
+*.lp    text eol=lf
+*.json    text eol=lf
+*.yaml    text eol=lf
+*.yml    text eol=lf
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.pdf   binary
