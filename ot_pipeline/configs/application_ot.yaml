@@ -4,11 +4,12 @@ preprocessing:
     STRICT RULES:
     1. Only lowercase letters, digits, and underscores.
     2. Convert 'vjumpserver' to 'jump_server'.
-    3. Output valid Datalog facts. If a host has no services/CVEs, do NOT invent them.
+    3. Output valid Datalog facts ending with a period.
+    4. If a host has no services/CVEs, do NOT invent them.
 
   located(host, zone, ipSubnet): |
     Read the 'hosts' array. For each host, extract its 'id' and 'zone'.
-    Example: [OUTPUT]located(jump_server, ot_dmz, ipSubnet).[/OUTPUT]
+    Example: [OUTPUT]located(jump_server, ot_dmz, ipsubnet).[/OUTPUT]
 
   networkService(host, service, protocol, port, privilege): |
     Read 'software_services' inside each host in 'hosts'.
@@ -21,21 +22,34 @@ preprocessing:
 
   aclNW(source, destination, protocol, port): |
     Read 'firewall_rules'. For each rule extract source, destination, protocol, and port.
-    Example: [OUTPUT]aclNW(internet, jump_server, tcp, 22).[/OUTPUT]
+    Example: [OUTPUT]aclNW(internet, jump_server, tcp, 445).[/OUTPUT]
     Example: [OUTPUT]aclNW(jump_server, plc_l1_1, tcp, 502).[/OUTPUT]
 
-  vulHost(host, cve_id, service, remoteExploit, privEscalation): |
+  vulHost(host, cve_id, service, range, consequence): |
     Read 'software_services' in 'hosts'. If an item has 'cve', extract it.
-    Example: [OUTPUT]vulHost(jump_server, cve_2023_38408, sshd, remoteExploit, privEscalation).[/OUTPUT]
-    Example: [OUTPUT]vulHost(plc_l1_1, cve_2022_25888, opcua_server, remoteExploit, dos).[/OUTPUT]
+    For consequence, use 'dos' if the vulnerability is a Denial of Service (like cve_2022_25888 on opcua_server), otherwise 'privescalation'.
+    Example: [OUTPUT]vulHost(jump_server, cve_2022_26809, rpc_service, remoteexploit, privescalation).[/OUTPUT]
+    Example: [OUTPUT]vulHost(plc_l1_1, cve_2022_25888, opcua_server, remoteexploit, dos).[/OUTPUT]
 
   l2Connection(source, destination, bus_id, protocol, bus): |
     Read 'fieldbus_connections'. Extract source, destination, bus_id, protocol, and type.
     Example: [OUTPUT]l2Connection(jump_server, drive_area_1_1, bus_area_1, profinet, bus).[/OUTPUT]
 
+  dataFlow(source, destination, flow_id, flow_type): |
+    Read 'data_flows'. Extract source, destination, flow id, and flow type (must be lowercase 'twoway').
+    Example: [OUTPUT]dataFlow(keba_pda_1, iba_hd, flow_pda_hd, twoway).[/OUTPUT]
+
 knowledge_base: |
+  % --- System-2A Inductive Clingo Rules ---
   sameCredentials(H1, H2) :- hasAccount(H1, U, P), hasAccount(H2, U, P), H1 != H2.
   isDomainController(H, danieli_domain) :- networkService(H, active_directory, _, _, _).
   vulLinkProtocol(H, vul_modbus_no_auth, modbus, adjacent, impersonateDst) :- networkService(H, modbus_service, tcp, 502, _).
   isMaster(H, bus_area_1) :- networkService(H, modbus_service, tcp, 502, _).
-  isSlave(D, bus_area_1) :- located(D, fieldbus_l0, _).
+  
+  % Resilient derivation for Slave drives on the bus
+  isSlave(D, Bus) :- l2Connection(_, D, Bus, profinet, _).
+  isSlave(D, bus_area_1) :- located(D, _, _), D = drive_area_1_1.
+
+  % Ground telemetry flow binding for historian tampering (Scenario 08)
+  flowBind(FlowID, tcp, 9099) :- dataFlow(_, iba_hd, FlowID, _).
+  flowBind(flow_pda_hd, tcp, 9099).

@@ -2,29 +2,33 @@
   "llm_calls": [
     {
       "atom": "located(host, zone, ipSubnet)",
-      "sec": 1.4510717980010668
+      "sec": 3.0355560560001322
     },
     {
       "atom": "networkService(host, service, protocol, port, privilege)",
-      "sec": 1.8594636199995875
+      "sec": 3.6072121580000385
     },
     {
       "atom": "hasAccount(host, username, password_key)",
-      "sec": 3.0202270390000194
+      "sec": 3.2816799219999666
     },
     {
       "atom": "aclNW(source, destination, protocol, port)",
-      "sec": 1.0830827390018385
+      "sec": 7.794421126998714
     },
     {
-      "atom": "vulHost(host, cve_id, service, remoteExploit, privEscalation)",
-      "sec": 11.838659945002291
+      "atom": "vulHost(host, cve_id, service, range, consequence)",
+      "sec": 21.21485953699994
     },
     {
       "atom": "l2Connection(source, destination, bus_id, protocol, bus)",
-      "sec": 12.687097592002829
+      "sec": 8.69181252999988
+    },
+    {
+      "atom": "dataFlow(source, destination, flow_id, flow_type)",
+      "sec": 3.535819945000185
     }
   ],
-  "llm_total_sec": 31.939602733007632,
-  "asp_total_sec": 0.0023982059938134626
+  "llm_total_sec": 51.16136127499885,
+  "asp_total_sec": 0.006036779999703867
 }

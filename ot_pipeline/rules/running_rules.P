@@ -111,7 +111,7 @@ interaction_rule(
         vulHost(TargetHost, _VulId, Program, remoteExploit, privEscalation),
         netAccess(_Principal, _AttackerSource, TargetHost, Protocol, Port)),
     rule_desc('Remote code execution via vulnerable network service', 1.0)
-).
+). 
 
 % Rule 4: Lateral Movement via Shared Administrative Credentials
 interaction_rule(

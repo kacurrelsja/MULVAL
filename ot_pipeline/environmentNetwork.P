@@ -1,110 +1,102 @@
+/* Auto-generated via LLMASP Pipeline (Alviano et al.) */
 
 attackerLocated(internet).
 malicious(internet).
-located(jump_server, ot_dmz, ipsubnet).
-located(fwd_proxy, ot_dmz, ipsubnet).
-located(rev_proxy, ot_dmz, ipsubnet).
-located(vdc01, danieli_domain, ipsubnet).
-located(vdc02, danieli_domain, ipsubnet).
-located(ms_activedirectory, danieli_domain, ipsubnet).
-located(radius, danieli_domain, ipsubnet).
-located(certificationauthority, danieli_domain, ipsubnet).
-located(vbackup, danieli_domain, ipsubnet).
-located(vassetinventory, danieli_domain, ipsubnet).
-located(vpatchserver, danieli_domain, ipsubnet).
-located(logaggregator, danieli_domain, ipsubnet).
-located(vhmi_srv01, level_2_supervisory, ipsubnet).
-located(vl2_b_w, level_2_supervisory, ipsubnet).
-located(vdb_b_w, level_2_supervisory, ipsubnet).
-located(vrm_hmi01, level_2_supervisory, ipsubnet).
-located(vrm_twshmi01, level_2_supervisory, ipsubnet).
-located(plc_l1_1, level_1_network, ipsubnet).
-located(keba_pda_1, level_1_network, ipsubnet).
-located(iba_hd, level_2_supervisory, ipsubnet).
-located(drive_area_1_1, fieldbus_l0, ipsubnet).
 
-networkService(jump_server, rpc_service, tcp, 445, admin).
-networkService(fwd_proxy, reverse_proxy_svc, tcp, 8443, admin).
-networkService(rev_proxy, reverse_proxy_svc, tcp, 8443, admin).
-networkService(vdc01, active_directory, tcp, 389, admin).
-networkService(vdc02, active_directory, tcp, 389, admin).
-networkService(ms_activedirectory, active_directory, tcp, 389, admin).
-networkService(radius, radius_auth, udp, 1812, admin).
-networkService(certificationauthority, adcs_web_enrollment, tcp, 443, admin).
-networkService(vbackup, backup_service, tcp, 445, admin).
-networkService(vassetinventory, asset_inventory_web, tcp, 8443, admin).
-networkService(vpatchserver, patch_management, tcp, 8530, admin).
-networkService(logaggregator, syslog_collector, tcp, 6514, admin).
-networkService(vhmi_srv01, hmi_runtime, tcp, 8080, admin).
-networkService(vl2_b_w, scada_client, tcp, 8081, admin).
-networkService(vdb_b_w, historian_db, tcp, 1433, admin).
-networkService(vrm_hmi01, hmi_runtime, tcp, 8080, admin).
-networkService(vrm_twshmi01, hmi_runtime, tcp, 8080, admin).
-networkService(plc_l1_1, modbus_service, tcp, 502, root).
-networkService(plc_l1_1, opcua_server, tcp, 4840, root).
-networkService(keba_pda_1, sensor_telemetry_agent, tcp, 8091, admin).
-networkService(iba_hd, iba_historian, tcp, 9099, admin).
+aclNW(internet,jump_server,tcp,445).
+aclNW(jump_server,certificationauthority,tcp,443).
+aclNW(jump_server,plc_l1_1,tcp,4840).
+aclNW(jump_server,plc_l1_1,tcp,502).
+aclNW(jump_server,vbackup,tcp,445).
+aclNW(jump_server,vdc01,tcp,389).
+aclNW(jump_server,vhmi_srv01,tcp,8080).
+aclNW(jump_server,vl2_b_w,tcp,8081).
+aclNW(vdc01,certificationauthority,tcp,443).
+aclNW(vdc01,vdc02,tcp,389).
+dataFlow(keba_pda_1,iba_hd,flow_pda_hd,twoway).
+flowBind(flow_pda_hd,tcp,9099).
+hasAccount(certificationauthority,admin,ca_local_hash_9042).
+hasAccount(fwd_proxy,admin,fwdproxy_hash_7712).
+hasAccount(iba_hd,admin,ibahd_hash_2260).
+hasAccount(jump_server,admin,admin_hash_1969).
+hasAccount(keba_pda_1,admin,admin_hash_1969).
+hasAccount(logaggregator,admin,logagg_hash_4457).
+hasAccount(ms_activedirectory,admin,msad_hash_5510).
+hasAccount(radius,admin,radius_hash_2287).
+hasAccount(rev_proxy,admin,revproxy_hash_7713).
+hasAccount(vassetinventory,admin,assetinv_hash_6634).
+hasAccount(vbackup,svc_backup,backup_svc_hash_2044).
+hasAccount(vdb_b_w,admin,dbbw_hash_5567).
+hasAccount(vdc01,admin,admin_hash_1969).
+hasAccount(vdc01,svc_backup,backup_svc_hash_2044).
+hasAccount(vdc02,admin,dc02_hash_3391).
+hasAccount(vhmi_srv01,admin,hmisrv_hash_1123).
+hasAccount(vl2_b_w,admin,l2bw_hash_3345).
+hasAccount(vpatchserver,admin,patchesrv_hash_8821).
+hasAccount(vrm_hmi01,admin,rmhmi01_hash_7789).
+hasAccount(vrm_twshmi01,admin,rmtwshmi01_hash_9901).
+isDomainController(ms_activedirectory,danieli_domain).
+isDomainController(vdc01,danieli_domain).
+isDomainController(vdc02,danieli_domain).
+isMaster(plc_l1_1,bus_area_1).
+isSlave(drive_area_1_1,bus_area_1).
+l2Connection(jump_server,drive_area_1_1,bus_area_1,profinet,bus).
+located(certificationauthority,danieli_domain,ipsubnet).
+located(drive_area_1_1,fieldbus_l0,ipsubnet).
+located(fwd_proxy,ot_dmz,ipsubnet).
+located(iba_hd,level_2_supervisory,ipsubnet).
+located(jump_server,ot_dmz,ipsubnet).
+located(keba_pda_1,level_1_network,ipsubnet).
+located(logaggregator,danieli_domain,ipsubnet).
+located(ms_activedirectory,danieli_domain,ipsubnet).
+located(plc_l1_1,level_1_network,ipsubnet).
+located(radius,danieli_domain,ipsubnet).
+located(rev_proxy,ot_dmz,ipsubnet).
+located(vassetinventory,danieli_domain,ipsubnet).
+located(vbackup,danieli_domain,ipsubnet).
+located(vdb_b_w,level_2_supervisory,ipsubnet).
+located(vdc01,danieli_domain,ipsubnet).
+located(vdc02,danieli_domain,ipsubnet).
+located(vhmi_srv01,level_2_supervisory,ipsubnet).
+located(vl2_b_w,level_2_supervisory,ipsubnet).
+located(vpatchserver,danieli_domain,ipsubnet).
+located(vrm_hmi01,level_2_supervisory,ipsubnet).
+located(vrm_twshmi01,level_2_supervisory,ipsubnet).
+networkService(certificationauthority,adcs_web_enrollment,tcp,443,admin).
+networkService(fwd_proxy,reverse_proxy_svc,tcp,8443,admin).
+networkService(iba_hd,iba_historian,tcp,9099,admin).
+networkService(jump_server,rpc_service,tcp,445,admin).
+networkService(keba_pda_1,sensor_telemetry_agent,tcp,8091,admin).
+networkService(logaggregator,syslog_collector,tcp,6514,admin).
+networkService(ms_activedirectory,active_directory,tcp,389,admin).
+networkService(plc_l1_1,modbus_service,tcp,502,root).
+networkService(plc_l1_1,opcua_server,tcp,4840,root).
+networkService(radius,radius_auth,udp,1812,admin).
+networkService(rev_proxy,reverse_proxy_svc,tcp,8443,admin).
+networkService(vassetinventory,asset_inventory_web,tcp,8443,admin).
+networkService(vbackup,backup_service,tcp,445,admin).
+networkService(vdb_b_w,historian_db,tcp,1433,admin).
+networkService(vdc01,active_directory,tcp,389,admin).
+networkService(vdc02,active_directory,tcp,389,admin).
+networkService(vhmi_srv01,hmi_runtime,tcp,8080,admin).
+networkService(vl2_b_w,scada_client,tcp,8081,admin).
+networkService(vpatchserver,patch_management,tcp,8530,admin).
+networkService(vrm_hmi01,hmi_runtime,tcp,8080,admin).
+networkService(vrm_twshmi01,hmi_runtime,tcp,8080,admin).
+sameCredentials(jump_server,keba_pda_1).
+sameCredentials(jump_server,vdc01).
+sameCredentials(keba_pda_1,jump_server).
+sameCredentials(keba_pda_1,vdc01).
+sameCredentials(vbackup,vdc01).
+sameCredentials(vdc01,jump_server).
+sameCredentials(vdc01,keba_pda_1).
+sameCredentials(vdc01,vbackup).
+vulHost(certificationauthority,cve_2022_26923,adcs_web_enrollment,remoteexploit,privescalation).
+vulHost(jump_server,cve_2022_26809,rpc_service,remoteexploit,privescalation).
+vulHost(plc_l1_1,cve_2022_25888,opcua_server,remoteexploit,dos).
+vulLinkProtocol(plc_l1_1,vul_modbus_no_auth,modbus,adjacent,impersonateDst).
 
- 
-vulHost(jump_server, cve_2022_26809, rpc_service, remoteExploit, privEscalation). 
-vulHost(certificationauthority, cve_2022_26923, adcs_web_enrollment, remoteExploit, privEscalation).
-
-vulHost(plc_l1_1, cve_2022_25888, opcua_server, remoteExploit, dos).
-
-hasAccount(jump_server, admin, admin_hash_1969).
-hasAccount(fwd_proxy, admin, fwdproxy_hash_7712).
-hasAccount(rev_proxy, admin, revproxy_hash_7713).
-hasAccount(vdc01, admin, admin_hash_1969).
-hasAccount(vdc01, svc_backup, backup_svc_hash_2044).
-hasAccount(vdc02, admin, dc02_hash_3391).
-hasAccount(ms_activedirectory, admin, msad_hash_5510).
-hasAccount(radius, admin, radius_hash_2287).
-hasAccount(certificationauthority, admin, ca_local_hash_9042).
-hasAccount(vbackup, svc_backup, backup_svc_hash_2044).
-hasAccount(vassetinventory, admin, assetinv_hash_6634).
-hasAccount(vpatchserver, admin, patchsrv_hash_8821).
-hasAccount(logaggregator, admin, logagg_hash_4457).
-hasAccount(vhmi_srv01, admin, hmisrv_hash_1123).
-hasAccount(vl2_b_w, admin, l2bw_hash_3345).
-hasAccount(vdb_b_w, admin, dbbw_hash_5567).
-hasAccount(vrm_hmi01, admin, rmhmi01_hash_7789).
-hasAccount(vrm_twshmi01, admin, rmtwshmi01_hash_9901).
-hasAccount(keba_pda_1, admin, admin_hash_1969).
-hasAccount(iba_hd, admin, ibahd_hash_2260).
-
-sameCredentials(jump_server, vdc01).
-sameCredentials(vdc01, jump_server).
-sameCredentials(jump_server, keba_pda_1).
-sameCredentials(keba_pda_1, jump_server).
-sameCredentials(vdc01, keba_pda_1).
-sameCredentials(keba_pda_1, vdc01).
-sameCredentials(vdc01, vbackup).
-sameCredentials(vbackup, vdc01).
-
-isDomainController(vdc01, danieli_domain).
-isDomainController(vdc02, danieli_domain).
-isDomainController(ms_activedirectory, danieli_domain).
-
-vulLinkProtocol(plc_l1_1, vul_modbus_no_auth, modbus, adjacent, impersonateDst).
-
-l2Connection(jump_server, drive_area_1_1, bus_area_1, profinet, bus).
-isMaster(plc_l1_1, bus_area_1).
-isSlave(drive_area_1_1, bus_area_1).
-
-dataFlow(keba_pda_1, iba_hd, flow_pda_hd, twoway).
-flowBind(flow_pda_hd, tcp, 9099).
-
-aclNW(internet, jump_server, tcp, 445).
-aclNW(jump_server, vdc01, tcp, 389).
-aclNW(jump_server, vbackup, tcp, 445).
-aclNW(jump_server, certificationauthority, tcp, 443).
-aclNW(jump_server, vhmi_srv01, tcp, 8080).
-aclNW(jump_server, vl2_b_w, tcp, 8081).
-aclNW(jump_server, plc_l1_1, tcp, 502).
-aclNW(jump_server, plc_l1_1, tcp, 4840).
-aclNW(vdc01, vdc02, tcp, 389).
-aclNW(vdc01, certificationauthority, tcp, 443).
-
+% Core Evaluation Goals
 attackGoal(execCode(jump_server,admin)).
 attackGoal(execCode(vbackup,admin)).
 attackGoal(domainCompromise(danieli_domain)).

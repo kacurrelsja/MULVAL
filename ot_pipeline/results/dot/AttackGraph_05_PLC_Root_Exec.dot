@@ -12,7 +12,7 @@ digraph G {
 	11 [label="11:aclNW(internet,jump_server,tcp,445):1",shape=box];
 	12 [label="12:malicious(internet):1",shape=box];
 	13 [label="13:attackerLocated(internet):1",shape=box];
-	14 [label="14:vulHost(jump_server,cve_2022_26809,rpc_service,remoteExploit,privEscalation):1",shape=box];
+	14 [label="14:vulHost(jump_server,cve_2022_26809,rpc_service,remoteexploit,privescalation):1",shape=box];
 	15 [label="15:networkService(jump_server,rpc_service,tcp,445,admin):1",shape=box];
 	5 -> 	4;
 	6 -> 	4;

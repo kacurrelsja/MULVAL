@@ -6,14 +6,8 @@ digraph G {
 	5 [label="5:aclNW(internet,jump_server,tcp,445):1",shape=box];
 	6 [label="6:malicious(internet):1",shape=box];
 	7 [label="7:attackerLocated(internet):1",shape=box];
-	8 [label="8:vulHost(jump_server,cve_2022_26809,rpc_service,remoteExploit,privEscalation):1",shape=box];
+	8 [label="8:vulHost(jump_server,cve_2022_26809,rpc_service,remoteexploit,privescalation):1",shape=box];
 	9 [label="9:networkService(jump_server,rpc_service,tcp,445,admin):1",shape=box];
-	10 [label="10:execCode(plc_l1_1,root):0",shape=diamond];
-	11 [label="11:RULE 6 (Unauthorized control of industrial controller yields root execution privilege):0",shape=ellipse];
-	12 [label="12:unauthorizedControl(plc_l1_1):0",shape=diamond];
-	13 [label="13:RULE 5 (Unauthorized industrial command injection into PLC over unauthenticated Modbus/TCP):0",shape=ellipse];
-	14 [label="14:networkService(plc_l1_1,modbus_service,tcp,502,root):1",shape=box];
-	15 [label="15:aclNW(jump_server,plc_l1_1,tcp,502):1",shape=box];
 	5 -> 	4;
 	6 -> 	4;
 	7 -> 	4;
@@ -22,10 +16,4 @@ digraph G {
 	8 -> 	2;
 	9 -> 	2;
 	2 -> 	1;
-	14 -> 	13;
-	15 -> 	13;
-	1 -> 	13;
-	13 -> 	12;
-	12 -> 	11;
-	11 -> 	10;
 }

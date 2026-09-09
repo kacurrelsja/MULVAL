@@ -108,7 +108,7 @@ interaction_rule(
 interaction_rule(
     (execCode(TargetHost, Privilege) :-
         networkService(TargetHost, Program, Protocol, Port, Privilege),
-        vulHost(TargetHost, _VulId, Program, remoteExploit, privEscalation),
+        vulHost(TargetHost, _VulId, Program, remoteexploit, privescalation),
         netAccess(_Principal, _AttackerSource, TargetHost, Protocol, Port)),
     rule_desc('Remote code execution via vulnerable network service', 1.0)
 ).
@@ -150,7 +150,7 @@ interaction_rule(
     (dos(Principal, TargetPLC) :-
         malicious(Principal),
         networkService(TargetPLC, opcua_server, tcp, 4840, _Perm),
-        vulHost(TargetPLC, cve_2022_25888, opcua_server, remoteExploit, dos),
+        vulHost(TargetPLC, cve_2022_25888, opcua_server, remoteexploit, _),
         aclNW(SourceNode, TargetPLC, tcp, 4840),
         execCode(SourceNode, _Perm2)),
     rule_desc('Denial of Service against Level 1 OPC UA server disabling control-loop communications', 1.0)
@@ -170,7 +170,7 @@ interaction_rule(
 % Rule 10: Historian Telemetry Tampering
 interaction_rule(
     (processDataTampering(SourcePDA, TargetHD) :-
-        dataFlow(SourcePDA, TargetHD, FlowID, twoWay),
+        dataFlow(SourcePDA, TargetHD, FlowID, twoway),
         flowBind(FlowID, tcp, Port),
         networkService(TargetHD, iba_historian, tcp, Port, _Perm),
         execCode(SourcePDA, _Perm2)),

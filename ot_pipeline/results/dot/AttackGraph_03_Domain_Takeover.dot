@@ -12,19 +12,13 @@ digraph G {
 	11 [label="11:aclNW(internet,jump_server,tcp,445):1",shape=box];
 	12 [label="12:malicious(internet):1",shape=box];
 	13 [label="13:attackerLocated(internet):1",shape=box];
-	14 [label="14:vulHost(jump_server,cve_2022_26809,rpc_service,remoteExploit,privEscalation):1",shape=box];
+	14 [label="14:vulHost(jump_server,cve_2022_26809,rpc_service,remoteexploit,privescalation):1",shape=box];
 	15 [label="15:networkService(jump_server,rpc_service,tcp,445,admin):1",shape=box];
 	16 [label="16:RULE 3 (Lateral movement across hosts via shared administrative credentials):0",shape=ellipse];
 	17 [label="17:sameCredentials(keba_pda_1,vdc01):1",shape=box];
 	18 [label="18:execCode(keba_pda_1,admin):0",shape=diamond];
 	19 [label="19:RULE 3 (Lateral movement across hosts via shared administrative credentials):0",shape=ellipse];
 	20 [label="20:sameCredentials(jump_server,keba_pda_1):1",shape=box];
-	21 [label="21:execCode(plc_l1_1,root):0",shape=diamond];
-	22 [label="22:RULE 6 (Unauthorized control of industrial controller yields root execution privilege):0",shape=ellipse];
-	23 [label="23:unauthorizedControl(plc_l1_1):0",shape=diamond];
-	24 [label="24:RULE 5 (Unauthorized industrial command injection into PLC over unauthenticated Modbus/TCP):0",shape=ellipse];
-	25 [label="25:networkService(plc_l1_1,modbus_service,tcp,502,root):1",shape=box];
-	26 [label="26:aclNW(jump_server,plc_l1_1,tcp,502):1",shape=box];
 	3 -> 	2;
 	6 -> 	5;
 	11 -> 	10;
@@ -45,10 +39,4 @@ digraph G {
 	16 -> 	4;
 	4 -> 	2;
 	2 -> 	1;
-	25 -> 	24;
-	26 -> 	24;
-	7 -> 	24;
-	24 -> 	23;
-	23 -> 	22;
-	22 -> 	21;
 }
