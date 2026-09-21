@@ -110,6 +110,12 @@ possible_duplicate_trace_step(because(1,rule_desc('Network reachability from com
 
 possible_duplicate_trace_step(because(1,rule_desc('Network reachability from compromised intermediate host',1.0),netAccess(internet,jump_server,certificationauthority,tcp,443),[aclNW(jump_server,certificationauthority,tcp,443),malicious(internet),execCode(jump_server,admin)])).
 
+possible_duplicate_trace_step(because(1,rule_desc('Network reachability from compromised intermediate host',1.0),netAccess(internet,jump_server,plc_l1_1,tcp,4840),[aclNW(jump_server,plc_l1_1,tcp,4840),malicious(internet),execCode(jump_server,admin)])).
+
+possible_duplicate_trace_step(because(1,rule_desc('Network reachability from compromised intermediate host',1.0),netAccess(internet,jump_server,plc_l1_1,tcp,4840),[aclNW(jump_server,plc_l1_1,tcp,4840),malicious(internet),execCode(jump_server,admin)])).
+
+possible_duplicate_trace_step(because(2,rule_desc('Remote code execution via vulnerable network service',1.0),execCode(plc_l1_1,root),[netAccess(internet,jump_server,plc_l1_1,tcp,4840),vulHost(plc_l1_1,cve_2022_25888,opcua_server,remoteexploit,privescalation),networkService(plc_l1_1,opcua_server,tcp,4840,root)])).
+
 possible_duplicate_trace_step(because(2,rule_desc('Remote code execution via vulnerable network service',1.0),execCode(certificationauthority,admin),[netAccess(internet,vdc01,certificationauthority,tcp,443),vulHost(certificationauthority,cve_2022_26923,adcs_web_enrollment,remoteexploit,privescalation),networkService(certificationauthority,adcs_web_enrollment,tcp,443,admin)])).
 
 possible_duplicate_trace_step(because(2,rule_desc('Remote code execution via vulnerable network service',1.0),execCode(certificationauthority,admin),[netAccess(internet,jump_server,certificationauthority,tcp,443),vulHost(certificationauthority,cve_2022_26923,adcs_web_enrollment,remoteexploit,privescalation),networkService(certificationauthority,adcs_web_enrollment,tcp,443,admin)])).

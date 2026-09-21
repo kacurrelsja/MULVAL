@@ -166,7 +166,6 @@ interaction_rule(
         unauthorizedControl(MasterPLC)),
     rule_desc('Unauthorized physical drive actuation via unauthenticated PROFINET bus link', 1.0)
 ).
-
 % Rule 10: Historian Telemetry Tampering
 interaction_rule(
     (processDataTampering(SourcePDA, TargetHD) :-

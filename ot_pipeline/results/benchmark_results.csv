@@ -1,9 +1,9 @@
 scenario,goal,status,exec_time_sec,num_nodes,num_edges
-01_DMZ_Ingress,"execCode(jump_server,admin)",OK,1.373195796,9,8
-02_Lateral_Credential_Reuse,"execCode(vbackup,admin)",OK,.990085324,20,20
-03_Domain_Takeover,"domainCompromise(danieli_domain)",OK,1.117367948,20,20
-04_PLC_Command_Injection,"unauthorizedControl(plc_l1_1)",OK,1.042111931,13,12
-05_PLC_Root_Exec,"execCode(plc_l1_1,root)",OK,1.008943503,15,14
-06_PROFINET_Drive_Control,"physicalDriveControl(jump_server,drive_area_1_1)",OK,1.142213208,18,18
-07_OPCUA_DoS,"dos(internet,plc_l1_1)",OK,1.124602134,14,14
-08_Historian_Data_Tampering,"processDataTampering(keba_pda_1,iba_hd)",OK,1.154273352,22,22
+01_DMZ_Ingress,"execCode(jump_server,admin)",OK,1.038421677,9,8
+02_Lateral_Credential_Reuse,"execCode(vbackup,admin)",OK,1.174163215,20,20
+03_Domain_Takeover,"domainCompromise(danieli_domain)",OK,1.096926877,20,20
+04_PLC_Command_Injection,"unauthorizedControl(plc_l1_1)",OK,.962946907,13,12
+05_PLC_Root_Exec,"execCode(plc_l1_1,root)",OK,1.136665445,21,22
+06_PROFINET_Drive_Control,"physicalDriveControl(jump_server,drive_area_1_1)",OK,1.108657558,18,18
+07_OPCUA_DoS,"dos(internet,plc_l1_1)",OK,.991278680,14,14
+08_Historian_Data_Tampering,"processDataTampering(keba_pda_1,iba_hd)",OK,1.477302564,22,22

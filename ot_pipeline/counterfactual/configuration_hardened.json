@@ -1,0 +1,382 @@
+{
+  "topology_metadata": {
+    "plant_name": "Danieli Automation Reference Plant (Hardened Baseline)",
+    "description": "Counterfactual remediation: Enforced LAPS credential segregation across DMZ/Internal hosts and revoked direct DMZ-to-PLC Modbus/TCP firewall conduit."
+  },
+  "hosts": [
+    {
+      "id": "jump_server",
+      "zone": "ot_dmz",
+      "credentials": {
+        "admin": "jump_admin_hash_4401"
+      },
+      "software_services": [
+        {
+          "name": "rpc_service",
+          "port": 445,
+          "protocol": "tcp",
+          "privilege": "admin",
+          "cve": "cve_2022_26809"
+        }
+      ]
+    },
+    {
+      "id": "fwd_proxy",
+      "zone": "ot_dmz",
+      "credentials": {
+        "admin": "fwdproxy_hash_7712"
+      },
+      "software_services": [
+        {
+          "name": "reverse_proxy_svc",
+          "port": 8443,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "rev_proxy",
+      "zone": "ot_dmz",
+      "credentials": {
+        "admin": "revproxy_hash_7713"
+      },
+      "software_services": [
+        {
+          "name": "reverse_proxy_svc",
+          "port": 8443,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vdc01",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "vdc01_admin_hash_8912",
+        "backup_svc": "backup_svc_hash_2044"
+      },
+      "software_services": [
+        {
+          "name": "active_directory",
+          "port": 389,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vdc02",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "dc02_hash_3391"
+      },
+      "software_services": [
+        {
+          "name": "active_directory",
+          "port": 389,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "ms_activedirectory",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "msad_hash_5510"
+      },
+      "software_services": [
+        {
+          "name": "active_directory",
+          "port": 389,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "radius",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "radius_hash_2287"
+      },
+      "software_services": [
+        {
+          "name": "radius_auth",
+          "port": 1812,
+          "protocol": "udp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "certificationauthority",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "ca_local_hash_9042"
+      },
+      "software_services": [
+        {
+          "name": "adcs_web_enrollment",
+          "port": 443,
+          "protocol": "tcp",
+          "privilege": "admin",
+          "cve": "cve_2022_26923"
+        }
+      ]
+    },
+    {
+      "id": "vbackup",
+      "zone": "danieli_domain",
+      "credentials": {
+        "backup_svc": "backup_svc_hash_2044"
+      },
+      "software_services": [
+        {
+          "name": "backup_service",
+          "port": 445,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vassetinventory",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "assetinv_hash_6634"
+      },
+      "software_services": [
+        {
+          "name": "asset_inventory_web",
+          "port": 8443,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vpatchserver",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "patchsrv_hash_8821"
+      },
+      "software_services": [
+        {
+          "name": "patch_management",
+          "port": 8530,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "logaggregator",
+      "zone": "danieli_domain",
+      "credentials": {
+        "admin": "logagg_hash_4457"
+      },
+      "software_services": [
+        {
+          "name": "syslog_collector",
+          "port": 6514,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vhmi_srv01",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "hmisrv_hash_1123"
+      },
+      "software_services": [
+        {
+          "name": "hmi_runtime",
+          "port": 8080,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vl2_b_w",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "l2bw_hash_3345"
+      },
+      "software_services": [
+        {
+          "name": "scada_client",
+          "port": 8081,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vdb_b_w",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "dbbw_hash_5567"
+      },
+      "software_services": [
+        {
+          "name": "historian_db",
+          "port": 1433,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vrm_hmi01",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "rmhmi01_hash_7789"
+      },
+      "software_services": [
+        {
+          "name": "hmi_runtime",
+          "port": 8080,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "vrm_twshmi01",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "rmtwshmi01_hash_9901"
+      },
+      "software_services": [
+        {
+          "name": "hmi_runtime",
+          "port": 8080,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "plc_l1_1",
+      "zone": "level_1_network",
+      "credentials": {},
+      "software_services": [
+        {
+          "name": "modbus_service",
+          "port": 502,
+          "protocol": "tcp",
+          "privilege": "root"
+        },
+        {
+          "name": "opcua_server",
+          "port": 4840,
+          "protocol": "tcp",
+          "privilege": "root",
+          "cve": "cve_2022_25888"
+        }
+      ]
+    },
+    {
+      "id": "keba_pda_1",
+      "zone": "level_1_network",
+      "credentials": {
+        "admin": "keba_local_hash_5120"
+      },
+      "software_services": [
+        {
+          "name": "sensor_telemetry",
+          "port": 8091,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "iba_hd",
+      "zone": "level_2_supervisory",
+      "credentials": {
+        "admin": "ibahd_hash_2260"
+      },
+      "software_services": [
+        {
+          "name": "iba_historian",
+          "port": 9099,
+          "protocol": "tcp",
+          "privilege": "admin"
+        }
+      ]
+    },
+    {
+      "id": "drive_area_1_1",
+      "zone": "fieldbus_10",
+      "credentials": {},
+      "software_services": []
+    }
+  ],
+  "firewall_rules": [
+    {
+      "source": "internet",
+      "destination": "jump_server",
+      "protocol": "tcp",
+      "port": 445
+    },
+    {
+      "source": "jump_server",
+      "destination": "vdc01",
+      "protocol": "tcp",
+      "port": 389
+    },
+    {
+      "source": "jump_server",
+      "destination": "vbackup",
+      "protocol": "tcp",
+      "port": 445
+    },
+    {
+      "source": "jump_server",
+      "destination": "certificationauthority",
+      "protocol": "tcp",
+      "port": 443
+    },
+    {
+      "source": "jump_server",
+      "destination": "vhmi_srv01",
+      "protocol": "tcp",
+      "port": 8080
+    },
+    {
+      "source": "jump_server",
+      "destination": "vl2_b_w",
+      "protocol": "tcp",
+      "port": 8081
+    },
+    {
+      "source": "jump_server",
+      "destination": "plc_l1_1",
+      "protocol": "tcp",
+      "port": 4840
+    }
+  ],
+  "fieldbus_connections": [
+    {
+      "source": "jump_server",
+      "destination": "drive_area_1_1",
+      "bus_id": "bus_area_1",
+      "protocol": "profinet"
+    }
+  ],
+  "data_flows": [
+    {
+      "source": "keba_pda_1",
+      "destination": "iba_hd",
+      "flow_id": "flow_pda_hd",
+      "type": "twoway"
+    }
+  ]
+}
