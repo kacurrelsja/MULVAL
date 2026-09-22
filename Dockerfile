@@ -1,66 +1,37 @@
-# Multi-stage/monolithic environment for Neuro-Symbolic OT Attack Graph Pipeline
+  GNU nano 7.2                                                             Dockerfile
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV MULVALROOT=/opt/mulval
-ENV PATH="${MULVALROOT}/bin:${MULVALROOT}/utils:${PATH}"
 
-# Install native dependencies: build tools, Java runtime, Graphviz, XSB prerequisites
+# 1. Install system toolchain, Java, Graphviz, and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
+    autoconf \
+    bison \
+    flex \
     gcc \
     g++ \
     make \
-    flex \
-    bison \
     graphviz \
-    default-jre \
-    python3 \
-    python3-pip \
-    python3-venv \
+    default-jdk \
     git \
     curl \
     bc \
     bsdmainutils \
-    wget \
     ca-certificates \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-fonts-recommended \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# Compile and install XSB Prolog
-WORKDIR /tmp
-RUN curl -fsSL https://downloads.sourceforge.net/project/xsb/xsb/5.0.0/XSB-5.0.0.tar.gz -o XSB.tar.gz \
-    && tar -xzf XSB.tar.gz \
-    && cd XSB/build \
-    && ./configure --prefix=/usr/local \
-    && ./makexsb \
-    && ./makexsb install \
-    && rm -rf /tmp/XSB*
+# Fix OpenJDK jni_md.h path for XSB Java interfacing
+RUN JNI_DIR=$(find /usr/lib/jvm -name "jni.h" | head -n 1 | xargs dirname) && \
+    if [ -f "$JNI_DIR/linux/jni_md.h" ]; then cp "$JNI_DIR/linux/jni_md.h" "$JNI_DIR/"; fi
 
-# Copy project tree into container
-WORKDIR /opt/mulval
-COPY . /opt/mulval
+# 2. Install Python dependencies (ASP Clingo solver, PyYAML, OpenAI SDK)
+RUN pip3 install --no-cache-dir clingo pyyaml openai pandas
 
-# Build MulVAL analyzers
-RUN make clean || true && make
-
-# Set up Python virtual environment with clingo and openai
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir \
-    pyyaml \
-    requests \
-    pandas \
-    clingo \
-    openai
-
-# Set executable permissions for all execution scripts
-RUN chmod +x /opt/mulval/utils/*.sh \
-             /opt/mulval/ot_pipeline/scripts/*.sh \
-             /opt/mulval/ot_pipeline/counterfactual/*.sh || true
-
-# Default entrypoint executes the entire end-to-end benchmark
-ENTRYPOINT ["/bin/bash", "./run_pipeline.sh"]
+# 3. Build & Install XSB from Git (Bypasses dead SourceForge links)
+WORKDIR /root
+RUN git clone --depth 1 https://git.code.sf.net/p/xsb/code XSB_SRC \
+    && BUILD_DIR=$(find /root/XSB_SRC -type d -name "build" | head -n 1) \
+    && cd "$BUILD_DIR" \
+    && ./configure \
