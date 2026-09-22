@@ -8,15 +8,13 @@ The framework couples **neural information extraction (LLMs)** with **symbolic d
 
 ## Quick Navigation
 
-1. [Installation & Setup](https://www.google.com/search?q=%2523installation--setup&utm_source=gemini)
-* [Option A: Docker (Recommended)](https://www.google.com/search?q=%2523option-a-docker-recommended&utm_source=gemini)
-* [Option B: Local Installation (Ubuntu 22.04 / 24.04)](https://www.google.com/search?q=%2523option-b-local-installation-ubuntu-2204--2404&utm_source=gemini)
-
-
-2. [How It Works](https://www.google.com/search?q=%2523how-it-works&utm_source=gemini)
-3. [Running the Pipeline](https://www.google.com/search?q=%2523running-the-pipeline&utm_source=gemini)
-4. [Customization & Extension Guide](https://www.google.com/search?q=%2523customization--extension-guide&utm_source=gemini)
-5. [Artifacts & Results](https://www.google.com/search?q=%2523artifacts--results&utm_source=gemini)
+1. [Installation & Setup](#installation--setup)
+   - [Option A: Docker (Recommended)](#option-a-docker-recommended)
+   - [Option B: Local Installation (Ubuntu 22.04 / 24.04)](#option-b-local-installation-ubuntu-2204--2404)
+2. [How It Works](#how-it-works)
+3. [Running the Pipeline](#running-the-pipeline)
+4. [Customization & Extension Guide](#customization--extension-guide)
+5. [Artifacts & Results](#artifacts--results)
 
 ---
 
