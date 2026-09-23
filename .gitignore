@@ -22,7 +22,29 @@ trash/
 /AttackGraph.pdf
 /AttackGraph.txt
 /AttackGraph.eps
+/AttackGraph.xml
 /environmentNetwork.P
+/attack1.P
+/run.P
+/environment.P
+/running_rules.P
+/trace_output.P
+/translated_rules.P
+/metric.P
+/dynamic_decl.gen
+/xsb_log.txt
+/pipeline_timing.json
+/VERTICES.CSV
+/ARCS.CSV
+/goals.txt
+
+# LLMASP intermediate outputs (regenerated on every pipeline run)
+ot_pipeline/translated_rules.P
+ot_pipeline/trace_output.P
+ot_pipeline/metric.P
+ot_pipeline/ARCS.CSV
+ot_pipeline/VERTICES.CSV
+ot_pipeline/dynamic_decl.gen
 
 # Python artifacts
 __pycache__/
