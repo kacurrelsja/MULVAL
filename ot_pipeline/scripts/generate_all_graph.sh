@@ -4,7 +4,7 @@ set -u
 # Resolve base directories dynamically
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OT_PIPELINE_DIR="$(dirname "$SCRIPT_DIR")"
-RESULTS_DIR="${OT_PIPELINE_DIR}/results"
+RESULTS_DIR="${OT_RESULTS_DIR:-${OT_PIPELINE_DIR}/results}"
 GRAPHS_DIR="${RESULTS_DIR}/graphs"
 DOT_DIR="${RESULTS_DIR}/dot"
 
@@ -35,7 +35,10 @@ for item in "${SCENARIOS[@]}"; do
   NAME="${item%%:*}"
   GOAL="${item#*:}"
 
-  rm -f AttackGraph.pdf AttackGraph.dot AttackGraph.png VERTICES.CSV ARCS.CSV
+  # XSB caches compiled .P sources as .xwam files keyed by (mtime, size) with
+  # second resolution; reusing a cache left over from the previous scenario
+  # silently reuses that scenario's asserted goal.
+  rm -f *.xwam AttackGraph.pdf AttackGraph.dot AttackGraph.png VERTICES.CSV ARCS.CSV
 
   echo ""
   echo "[*] Running Scenario: $NAME (Goal: $GOAL)"
@@ -62,6 +65,12 @@ for item in "${SCENARIOS[@]}"; do
 
     # Save raw graph definition to dot/
     cp AttackGraph.dot "${DOT_DIR}/AttackGraph_${NAME}.dot"
+
+    # Guard against goal leakage: the graph must be rooted at this scenario's goal.
+    if ! grep -qF "1 [label=\"1:${GOAL}:" "${DOT_DIR}/AttackGraph_${NAME}.dot"; then
+      echo "[-] GOAL MISMATCH for ${NAME}: root node is not ${GOAL}"
+      exit 1
+    fi
 
     # Clean local working directory intermediates
     rm -f AttackGraph.pdf AttackGraph.dot AttackGraph.png VERTICES.CSV ARCS.CSV
