@@ -13,8 +13,9 @@ The framework couples **neural information extraction (LLMs)** with **symbolic d
    - [Option B: Local Installation (Ubuntu 22.04 / 24.04)](#option-b-local-installation-ubuntu-2204--2404)
 2. [How It Works](#how-it-works)
 3. [Running the Pipeline](#running-the-pipeline)
-4. [Customization & Extension Guide](#customization--extension-guide)
-5. [Artifacts & Results](#artifacts--results)
+4. [Counterfactual Hardening Experiment](#counterfactual-hardening-experiment)
+5. [Customization & Extension Guide](#customization--extension-guide)
+6. [Artifacts & Results](#artifacts--results)
 
 ---
 
@@ -130,7 +131,7 @@ LLM_BASE_URL=https://api.groq.com/openai/v1
 The architecture follows a decoupled neuro-symbolic workflow:
 
 ```
-[ Plant Configuration ] (configuration.json)
+[ Plant Configuration ] (ot_pipeline/configs/configuration.json)
            │
            ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -145,8 +146,8 @@ The architecture follows a decoupled neuro-symbolic workflow:
 │    Computes transitive closures (credential reuse, domain   │
 │    identities, L2 fieldbus relationships) - zero hallucination│
 └──────────────────────────┬──────────────────────────────────┘
-                           │ 90 Validated Ground Datalog Facts
-                           ▼
+                            │ Validated Ground Datalog Facts
+                            ▼
 ┌─────────────────────────────────────────────────────────────┐
 │ 3. System-2B: Formal Attack Graph Derivation (MulVAL / XSB) │
 │    Horn-clause SLG resolution against OT interaction rules  │
@@ -180,6 +181,30 @@ chmod +x run_pipeline.sh
 2. Executes `ot_pipeline/scripts/generate_all_graph.sh` across all 8 evaluation attack scenarios.
 3. Automatically isolates attack goals, runs MulVAL resolution, renders Graphviz visualizations, and populates `benchmark_results.csv`.
 
+> **Reproducibility note:** every benchmark run clears stale XSB `.xwam` compilation caches and verifies that each generated graph is rooted at the current scenario's goal, so consecutive runs can never inherit a previous goal. Execution times in `benchmark_results.csv` depend on the host CPU and are not reproducible across machines; graph structure (node/edge counts) is deterministic for a given fact base.
+
+---
+
+## Counterfactual Hardening Experiment
+
+A counterfactual variant of the Danieli plant configuration is committed under `ot_pipeline/counterfactual/`. Relative to the baseline, it removes three firewall conduits:
+
+| Source | Destination | Protocol / Port | Effect |
+| --- | --- | --- | --- |
+| `jump_server` | `plc_l1_1` | `tcp/502` | Breaks direct lateral movement to the S7 PLC |
+| `vdc01` | `certificationauthority` | `tcp/443` | Breaks credential reuse toward the CA |
+| `vdc01` | `vdc02` | `tcp/389` | Breaks AD replication / lateral movement between domain controllers |
+
+The experiment re-derives all 8 scenario graphs on the hardened fact base (`environmentNetwork_hardened.P`) and is fully deterministic: it does **not** call the LLM and requires no API key.
+
+```bash
+# from the repository root (inside the container)
+./ot_pipeline/counterfactual/run_hardened.sh
+
+```
+
+Results are written to `ot_pipeline/counterfactual/results/` and the summary table is synced back to `ot_pipeline/counterfactual/benchmark_results_hardened.csv`. Expected outcome on the committed fact base: scenarios **01** and **07** remain reachable (`OK`), scenarios **02, 03, 04, 05, 06, 08** become `UNSATISFIABLE` (6 of 8).
+
 ---
 
 ## Customization & Extension Guide
@@ -188,21 +213,22 @@ To adapt or extend the pipeline, focus on these files:
 
 ### 1. Change the Industrial Topology / Network Inventory
 
-* **File:** `configuration.json`
+* **File:** `ot_pipeline/configs/configuration.json`
 * **What to edit:** Modify host IP definitions, open ports, installed software, CVE identifiers, active user accounts, firewall ACL conduits, and L2 fieldbus connections.
 
 ### 2. Modify LLM Extraction Prompts or Symbolic Completion Rules
 
-* **File:** `ot_pipeline/application_ot.yaml`
+* **File:** `ot_pipeline/configs/application_ot.yaml`
 * **What to edit:**
 * **System-1 Prompts:** Update prompt templates under `preprocessing` to instruct the LLM on extracting new predicate signatures.
 * **System-2A ASP Logic:** Update the `knowledge_base` section to add new inductive logic (e.g., custom credential inheritance or subnet routing logic).
+* `ot_pipeline/configs/behavior_ot.yaml` holds the additional pre/post-processing hooks used by the extraction engine.
 
 
 
 ### 3. Add or Modify OT Attack Interaction Rules
 
-* **File:** `attack1.P` *(and `ot_pipeline/rules/attack1.P`)*
+* **File:** `ot_pipeline/rules/attack1.P` *(canonical copy; `run_pipeline.sh` stages it as `./attack1.P` at the repository root during execution)*
 * **What to edit:** Contains formal Horn clauses defining how vulnerabilities combine. Modify this file if you want to model:
 * Novel lateral movement primitives (e.g., Modbus/TCP or EtherNet/IP unauthorized commanding).
 * Man-in-the-Middle (MitM) data-tampering attacks on industrial fieldbuses.
@@ -213,10 +239,9 @@ To adapt or extend the pipeline, focus on these files:
 ### 4. Adjust Evaluated Attack Goals & Scenarios
 
 * **File:** `ot_pipeline/scripts/generate_all_graph.sh`
-* **What to edit:** Look at the `SCENARIOS` array to add new target goals (e.g., targeting a safety PLC or an HMI station):
+* **What to edit:** each `SCENARIOS` entry is `ScenarioName:goal`; add a new entry to evaluate an additional goal (e.g., a safety PLC or an HMI station):
 ```bash
-"09:attackGoal(execCode(hmi_station,root)).:HMI Station Compromise"
-
+"09_HMI_Station_Exec:execCode(hmi_station,root)"
 ```
 
 
@@ -244,16 +269,24 @@ All outputs are written to `ot_pipeline/results/`:
 ├── Dockerfile                             # Containerization definition (Ubuntu 22.04 base)
 ├── run_pipeline.sh                        # Master entrypoint script
 ├── .env.example                           # Template for API credentials
-├── configuration.json                     # Danieli industrial plant architecture
-├── environmentNetwork.P                   # Compiled Datalog fact base (output of System-1/2A)
-├── attack1.P                              # Synthesized OT interaction rules (MulVAL)
 ├── ot_pipeline/
-│   ├── application_ot.yaml                # Prompt slicing definitions & Clingo ASP rules
+│   ├── environmentNetwork.P               # Compiled Datalog fact base (output of System-1/2A)
+│   ├── requirement.txt                    # Python dependencies (Clingo pinned)
+│   ├── configs/
+│   │   ├── configuration.json             # Danieli industrial plant architecture
+│   │   ├── application_ot.yaml            # Prompt slicing definitions & Clingo ASP rules
+│   │   └── behavior_ot.yaml               # Pre/post-processing hooks for the extractors
 │   ├── rules/
-│   │   └── attack1.P                      # Source interaction rules
+│   │   └── attack1.P                      # Canonical OT interaction rules (MulVAL)
 │   ├── scripts/
 │   │   ├── run_llmasp.py                  # Neural extraction & ASP inductive reasoning engine
-│   │   └── generate_all_graph.sh          # Benchmark execution suite (8 scenarios)
+│   │   ├── generate_all_graph.sh          # Benchmark execution suite (8 scenarios)
+│   │   └── format_graphs.py               # Label compaction & figure compositing (requires Pillow, host-side)
+│   ├── counterfactual/
+│   │   ├── configuration_hardened.json    # Hardened plant configuration (3 ACLs removed)
+│   │   ├── environmentNetwork_hardened.P  # Hardened Datalog fact base
+│   │   ├── benchmark_results_hardened.csv # Reproduced experiment summary
+│   │   └── run_hardened.sh                # Deterministic hardened re-derivation (no LLM, no API key)
 │   └── results/
 │       ├── benchmark_results.csv          # Compiled experimental metrics
 │       ├── pipeline_timing.json           # Execution latency logs

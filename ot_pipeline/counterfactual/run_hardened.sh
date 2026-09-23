@@ -1,27 +1,38 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-echo "=== Running Counterfactual Hardened Experiment from $ROOT_DIR ==="
+echo "=== Running Counterfactual Hardened Experiment (deterministic, no LLM) ==="
 cd "$ROOT_DIR"
 
-# 1. Compile configuration_hardened.json via System-1 and System-2A
-"$ROOT_DIR/venv/bin/python3" "$ROOT_DIR/ot_pipeline/scripts/run_llmasp.py" \
-    --input "$ROOT_DIR/ot_pipeline/counterfactual/configuration_hardened.json"
+FACTS_SRC="${SCRIPT_DIR}/environmentNetwork_hardened.P"
+RULES_SRC="${ROOT_DIR}/ot_pipeline/rules/attack1.P"
+COMMITTED_CSV="${SCRIPT_DIR}/benchmark_results_hardened.csv"
+RESULTS_DIR="${OT_RESULTS_DIR:-${SCRIPT_DIR}/results}"
 
-# Move the generated file to the counterfactual directory
-cp "$ROOT_DIR/ot_pipeline/environmentNetwork.P" "$ROOT_DIR/ot_pipeline/counterfactual/environmentNetwork_hardened.P"
+if [ ! -f "$FACTS_SRC" ]; then
+    echo "[-] Missing committed hardened fact base: ${FACTS_SRC}" >&2
+    exit 1
+fi
 
-# 2. Strip any hardcoded goals to allow isolated scenario execution
-sed -i '/attackGoal/d' "$ROOT_DIR/ot_pipeline/counterfactual/environmentNetwork_hardened.P"
+# 1. Stage the hardened fact base for isolated scenario execution
+cp "$FACTS_SRC" environmentNetwork.P
+sed -i '/attackGoal/d' environmentNetwork.P
 
-# 3. Copy to working directory and ensure attack1.P is present
-cp "$ROOT_DIR/ot_pipeline/counterfactual/environmentNetwork_hardened.P" "$ROOT_DIR/environmentNetwork.P"
-cp "$ROOT_DIR/ot_pipeline/rules/attack1.P" "$ROOT_DIR/attack1.P"
+# 2. Stage the canonical attack rules
+cp "$RULES_SRC" attack1.P
 
-# 4. Run the benchmark across all scenarios
-"$ROOT_DIR/ot_pipeline/scripts/generate_all_graph.sh" "$ROOT_DIR/environmentNetwork.P" -r "$ROOT_DIR/attack1.P" -v
+# 3. Run the benchmark, writing artifacts to the counterfactual results directory
+OT_RESULTS_DIR="$RESULTS_DIR" "${ROOT_DIR}/ot_pipeline/scripts/generate_all_graph.sh"
+
+# 4. Sync the benchmark table to the committed location only when writing to
+#    the default counterfactual directory; an OT_RESULTS_DIR override must not
+#    clobber committed artifacts.
+if [ "$RESULTS_DIR" = "${SCRIPT_DIR}/results" ]; then
+    cp "${RESULTS_DIR}/benchmark_results.csv" "${COMMITTED_CSV}"
+    echo "[+] Hardened benchmark table synced to ${COMMITTED_CSV}"
+fi
 
 echo "=== Counterfactual Benchmark Completed. ==="
