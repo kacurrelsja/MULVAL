@@ -314,7 +314,7 @@
     },
     {
       "id": "drive_area_1_1",
-      "zone": "fieldbus_10",
+      "zone": "fieldbus_l0",
       "credentials": {},
       "software_services": []
     }
