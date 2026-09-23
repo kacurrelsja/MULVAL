@@ -64,7 +64,7 @@ sudo apt install -y \
 python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
-pip install clingo pyyaml openai pandas
+pip install clingo==5.7.0 pyyaml openai pandas
 
 ```
 

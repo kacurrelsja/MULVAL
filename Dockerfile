@@ -26,7 +26,7 @@ RUN JNI_DIR=$(find /usr/lib/jvm -name "jni.h" | head -n 1 | xargs dirname) && \
     if [ -f "$JNI_DIR/linux/jni_md.h" ]; then cp "$JNI_DIR/linux/jni_md.h" "$JNI_DIR/"; fi
 
 # 2. Install Python dependencies (ASP Clingo solver, PyYAML, OpenAI SDK)
-RUN pip3 install --no-cache-dir clingo pyyaml openai pandas
+RUN pip3 install --no-cache-dir clingo==5.7.0 pyyaml openai pandas
 
 # 3. Build & Install XSB from Git (Bypasses dead SourceForge links)
 WORKDIR /root
