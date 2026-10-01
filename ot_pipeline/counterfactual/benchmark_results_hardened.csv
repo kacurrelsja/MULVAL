@@ -1,9 +1,9 @@
 scenario,goal,status,exec_time_sec,num_nodes,num_edges
-01_DMZ_Ingress,"execCode(jump_server,admin)",OK,1.242717302,9,8
-02_Lateral_Credential_Reuse,"execCode(vbackup,admin)",UNSATISFIABLE,.729453489,0,0
-03_Domain_Takeover,"domainCompromise(danieli_domain)",UNSATISFIABLE,.662849772,0,0
-04_PLC_Command_Injection,"unauthorizedControl(plc_l1_1)",UNSATISFIABLE,.756169351,0,0
-05_PLC_Root_Exec,"execCode(plc_l1_1,root)",UNSATISFIABLE,.813324606,0,0
-06_PROFINET_Drive_Control,"physicalDriveControl(jump_server,drive_area_1_1)",UNSATISFIABLE,.606104327,0,0
-07_OPCUA_DoS,"dos(internet,plc_l1_1)",OK,.983204596,14,14
-08_Historian_Data_Tampering,"processDataTampering(keba_pda_1,iba_hd)",UNSATISFIABLE,.689054096,0,0
+01_DMZ_Ingress,"execCode(jump_server,admin)",OK,.238620182,9,8
+02_Lateral_Credential_Reuse,"execCode(vbackup,admin)",UNSATISFIABLE,.171072632,0,0
+03_Domain_Takeover,"domainCompromise(danieli_domain)",UNSATISFIABLE,.171139889,0,0
+04_PLC_Command_Injection,"unauthorizedControl(plc_l1_1)",UNSATISFIABLE,.162277366,0,0
+05_PLC_Root_Exec,"execCode(plc_l1_1,root)",UNSATISFIABLE,.171827821,0,0
+06_PROFINET_Drive_Control,"physicalDriveControl(jump_server,drive_area_1_1)",UNSATISFIABLE,.174837683,0,0
+07_OPCUA_DoS,"dos(internet,plc_l1_1)",OK,.255831410,14,14
+08_Historian_Data_Tampering,"processDataTampering(keba_pda_1,iba_hd)",UNSATISFIABLE,.169879890,0,0

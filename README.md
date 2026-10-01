@@ -187,15 +187,14 @@ chmod +x run_pipeline.sh
 
 ## Counterfactual Hardening Experiment
 
-A counterfactual variant of the Danieli plant configuration is committed under `ot_pipeline/counterfactual/`. Relative to the baseline, it removes three firewall conduits:
+A counterfactual variant of the Danieli plant configuration is committed under `ot_pipeline/counterfactual/`. Relative to the baseline, it applies exactly two mitigations:
 
-| Source | Destination | Protocol / Port | Effect |
-| --- | --- | --- | --- |
-| `jump_server` | `plc_l1_1` | `tcp/502` | Breaks direct lateral movement to the S7 PLC |
-| `vdc01` | `certificationauthority` | `tcp/443` | Breaks credential reuse toward the CA |
-| `vdc01` | `vdc02` | `tcp/389` | Breaks AD replication / lateral movement between domain controllers |
+| Mitigation | Change | Effect |
+| --- | --- | --- |
+| **A** – Cross-zone firewall remediation | Revokes `aclNW(jump_server, plc_l1_1, tcp, 502)` | Removes the direct DMZ-to-PLC Modbus/TCP conduit |
+| **B** – Administrative credential segregation | Replaces the shared `admin_hash_1969` on `jump_server`, `vdc01` and `keba_pda_1` with unique hashes (LAPS-style) | Removes the `sameCredentials/2` links between these hosts |
 
-The experiment re-derives all 8 scenario graphs on the hardened fact base (`environmentNetwork_hardened.P`) and is fully deterministic: it does **not** call the LLM and requires no API key.
+The hardened fact base (`environmentNetwork_hardened.P`) is obtained by applying these two changes to the committed System-1 extraction and re-running the System-2A (Clingo) completion. The experiment re-derives all 8 scenario graphs on it and is fully deterministic: it does **not** call the LLM and requires no API key.
 
 ```bash
 # from the repository root (inside the container)
@@ -283,7 +282,7 @@ All outputs are written to `ot_pipeline/results/`:
 │   │   ├── generate_all_graph.sh          # Benchmark execution suite (8 scenarios)
 │   │   └── format_graphs.py               # Label compaction & figure compositing (requires Pillow, host-side)
 │   ├── counterfactual/
-│   │   ├── configuration_hardened.json    # Hardened plant configuration (3 ACLs removed)
+│   │   ├── configuration_hardened.json    # Hardened plant configuration (mitigations A + B)
 │   │   ├── environmentNetwork_hardened.P  # Hardened Datalog fact base
 │   │   ├── benchmark_results_hardened.csv # Reproduced experiment summary
 │   │   └── run_hardened.sh                # Deterministic hardened re-derivation (no LLM, no API key)
