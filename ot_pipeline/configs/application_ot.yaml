@@ -46,10 +46,8 @@ knowledge_base: |
   vulLinkProtocol(H, vul_modbus_no_auth, modbus, adjacent, impersonateDst) :- networkService(H, modbus_service, tcp, 502, _).
   isMaster(H, bus_area_1) :- networkService(H, modbus_service, tcp, 502, _).
   
-  % Resilient derivation for Slave drives on the bus
+  % Slave drives attached to a PROFINET fieldbus
   isSlave(D, Bus) :- l2Connection(_, D, Bus, profinet, _).
-  isSlave(D, bus_area_1) :- located(D, _, _), D = drive_area_1_1.
 
   % Ground telemetry flow binding for historian tampering (Scenario 08)
   flowBind(FlowID, tcp, 9099) :- dataFlow(_, iba_hd, FlowID, _).
-  flowBind(flow_pda_hd, tcp, 9099).
